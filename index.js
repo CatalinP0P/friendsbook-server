@@ -15,8 +15,14 @@ const validation = require("./validation/tokenValidation.js");
 const postsRouter = require("./routers/posts.js");
 app.use("/posts", validation.validateIdToken, postsRouter);
 
-const likesRouter = require('./routers/likes.js');
+const likesRouter = require("./routers/likes.js");
 app.use("/likes", validation.validateIdToken, likesRouter);
+
+const friendsRouter = require("./routers/friends.js");
+app.use("/friends", validation.validateIdToken, friendsRouter);
+
+const profileRouter = require("./routers/profile.js");
+app.use("/profile", validation.validateIdToken, profileRouter);
 
 app.listen(3001, () => {
   console.log("Server running on port 3001");
