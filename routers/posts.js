@@ -35,6 +35,7 @@ router.post("/", async (req, res) => {
     title: title,
     photoURL: photoURL,
     likes: [],
+    createdAt: new Date(),
   });
 
   res.send(response);
