@@ -14,4 +14,19 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/q/:q", async (req, res) => {
+  const { q } = req.params;
+
+  try {
+    const list = await auth.listUsers();
+
+    const filtered = list.users.filter((m) =>
+      m.displayName.toLowerCase().includes(q.toLowerCase())
+    );
+    res.json(filtered);
+  } catch (err) {
+    res.status(400).send(err);
+  }
+});
+
 module.exports = router;

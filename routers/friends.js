@@ -37,6 +37,16 @@ router.get("/", async (req, res) => {
   res.send(list);
 });
 
+router.get("/requests", async (req, res) => {
+  const response = await requests.find({ receiverId: req.user.uid }).toArray();
+  var list = [];
+  response.forEach((x) => {
+    list.push(x.senderId);
+  });
+
+  res.send(list);
+});
+
 router.get("/:id", async (req, res) => {
   res.send(await checkIfFriends(req.user.uid, req.params.id));
 });
