@@ -51,6 +51,31 @@ router.get("/:id", async (req, res) => {
   res.send(await checkIfFriends(req.user.uid, req.params.id));
 });
 
+router.get("/request/:userId", async (req, res) => {
+  // Checking if we send a request or got one
+  if (await checkIfFriends(req.params.userId, req.user.uid))
+    return res.send("Already friends");
+
+  console.log(req.user.uid);
+  console.log(req.params.userId);
+  const request = await requests.findOne({
+    $or: [
+      { senderId: req.user.uid, receiverId: req.params.userId },
+      { senderId: req.params.userId, receiverId: req.user.uid },
+    ],
+  });
+
+  console.log(request);
+
+  if (!request) return res.send("No Request");
+
+  if (request.senderId == req.user.uid) return res.send("Request Sent");
+  else if (request.receiverId == req.user.uid)
+    return res.send("Request Received");
+
+  return res.send("No Request");
+});
+
 router.post("/request/:userId", async (req, res) => {
   if (await checkIfFriends(req.params.userId, req.user.uid))
     return res.send("Already friends");
@@ -82,14 +107,14 @@ router.post("/request/:userId", async (req, res) => {
         receiverId: req.params.userId,
       });
 
-      return res.send("Request removed");
+      return res.send("No Request");
     } else {
       await requests.insertOne({
         senderId: req.user.uid,
         receiverId: req.params.userId,
       });
     }
-    return res.send("Request send");
+    return res.send("Request Sent");
   }
 });
 
